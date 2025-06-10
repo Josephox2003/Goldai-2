@@ -1,0 +1,39 @@
+import os
+import time
+import telegram
+import subprocess
+
+TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+bot = telegram.Bot(token=TOKEN)
+
+def send_telegram_message(message):
+    try:
+        bot.send_message(chat_id='@hicham_signals_bot', text=message)
+    except Exception as e:
+        print(f"Failed to send telegram message: {e}")
+
+def start_mt4():
+    # مثال لتشغيل MT4 مع Wine
+    return subprocess.Popen(['wine', 'terminal.exe'])
+
+def main():
+    send_telegram_message("🤖 GoldAI Bot Started!")
+    while True:
+        try:
+            process = start_mt4()
+            # هنا تضع الكود التحليلي الخاص بك مع MT4 API أو قراءة بيانات السوق
+
+            # مثلاً، نموذج بسيط للتشغيل المستمر
+            while True:
+                time.sleep(10)
+                # تحقق من حالة العملية
+                if process.poll() is not None:
+                    send_telegram_message("⚠️ MT4 process stopped unexpectedly, restarting...")
+                    break
+
+        except Exception as e:
+            send_telegram_message(f"⚠️ Bot encountered an error: {e}")
+            time.sleep(5)
+
+if __name__ == '__main__':
+    main()
